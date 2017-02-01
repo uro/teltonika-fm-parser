@@ -1,0 +1,28 @@
+{
+    "name": "uro/teltonika-fm-parser",
+    "description": "Teltonika FMXXXX parser library",
+    "type": "library",
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
+    },
+    "autoload":{
+        "psr-4": {
+            "Uro\\TeltonikaFmParser\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\": "tests"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Arkadiusz Surma",
+            "email": "arkadiusz@uchy.pl"
+        }
+    ]
+}
