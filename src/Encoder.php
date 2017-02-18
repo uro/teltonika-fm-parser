@@ -4,5 +4,7 @@ namespace Uro\TeltonikaFmParser;
 
 interface Encoder
 {
-    public function encode(string $payload): string;
+    public function encodeAuth(bool $isAuthenticated): string;
+
+    public function encodeData(int $numberOfRecords): string;
 }

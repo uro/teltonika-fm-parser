@@ -2,8 +2,8 @@
 
 namespace Uro\TeltonikaFmParser;
 
+use Uro\TeltonikaFmParser\Model\Data;
 use Uro\TeltonikaFmParser\Model\Imei;
-use Uro\TeltonikaFmParser\Model\Model;
 
 interface Decoder
 {
@@ -16,10 +16,12 @@ interface Decoder
      */
     public function isAuthentication(string $payload): bool;
 
+    public function decodeAuthentication(string $payload): Imei;
+
     /**
      * @param string $payload
      *
-     * @return Model|Imei
+     * @return array|Data[]
      */
-    public function decode(string $payload);
+    public function decodeData(string $payload): array;
 }
