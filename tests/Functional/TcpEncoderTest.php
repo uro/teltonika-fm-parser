@@ -21,8 +21,8 @@ class TcpEncoderTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function is_encoding_auth_properly()
     {
-        $hexResponseTrue = $this->tcpEncoder->encodeAuth(true);
-        $hexResponseFalse = $this->tcpEncoder->encodeAuth(false);
+        $hexResponseTrue = $this->tcpEncoder->encodeAuthentication(true);
+        $hexResponseFalse = $this->tcpEncoder->encodeAuthentication(false);
 
         $this->assertEquals('01', $hexResponseTrue);
         $this->assertEquals('00', $hexResponseFalse);

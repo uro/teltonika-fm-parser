@@ -1,6 +1,6 @@
 # Teltonika FM-XXXX Parser 
 
-[![Build Status](https://travis-ci.org/uro/teltonika-fm-parser.svg?branch=master)](https://travis-ci.org/uro/teltonika-fm-parser)
+[![Build Status](https://travis-ci.org/uro/teltonika-fm-parser.svg?branch=master)](https://travis-ci.org/uro/teltonika-fm-parser) [![Latest Stable Version](https://poser.pugx.org/uro/teltonika-fm-parser/v/stable)](https://packagist.org/packages/uro/teltonika-fm-parser) [![Total Downloads](https://poser.pugx.org/uro/teltonika-fm-parser/downloads)](https://packagist.org/packages/uro/teltonika-fm-parser)
 
 This repository is object oriented library to translate Teltonika protocols.
 
@@ -35,16 +35,16 @@ $decoder = new TcpDecoder();
 if($decoder->isAuthentication($payloadFromDevice)){ // returns true;
     
     $imei = $decoder->decodeAuthentication($payloadFromDevice);
-    var_dump(json_encode(imei));
+    echo json_encode(imei);
     
-    // Check if device is authenticated, and then encode response for device
+    // Check if device is authenticated in your system, and then encode response for device
     $encoder = new TcpEncoder();
-    $payload = $encoder->encodeAuth(true); // Yes, device is authenticated successfully
+    $payload = $encoder->encodeAuthentication(true); // Yes, device was authenticated successfully
 
-    // send $payload through the socket.
+    // send $payload though the socket.
 }
 ```
-var_dump will return:
+Echo will return:
 ```json
 {
     "imei": "862259588834290"
@@ -60,9 +60,9 @@ $tcpPayloadFromDevice = "00000000000000FE080400000113fc208dff000f14f650209cca800
 // Decode it
 $data = $this->decoder->decodeData($payload);
 
-var_dump(json_encode(data));
+echo json_encode(data);
 ```
-Will return:
+Echo will return:
 ```json
 [{
 	"dateTime": {
