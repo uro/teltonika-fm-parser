@@ -2,9 +2,10 @@
 
 namespace Uro\TeltonikaFmParser\Model;
 
+use JsonSerializable;
 use Uro\TeltonikaFmParser\Model\Exception\InvalidArgumentException;
 
-class Imei implements Model
+class Imei implements Model, JsonSerializable
 {
     const IMEI_LENGTH = 15;
 
@@ -33,6 +34,18 @@ class Imei implements Model
     public function getImei(): string
     {
         return $this->imei;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'imei' => $this->getImei()
+        ];
+    }
+
+    public function __toString(): string
+    {
+        return $this->getImei();
     }
 
     /**

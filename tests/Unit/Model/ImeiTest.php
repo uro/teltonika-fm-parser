@@ -32,6 +32,16 @@ class ImeiTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function is_json_serializable()
+    {
+        $imeiStr = "862259588834290";
+
+        $imei = json_encode(new Imei($imeiStr));
+
+        $this->assertJson('{"imei":"862259588834290"}', $imei);
+    }
+
+    /** @test */
     public function is_creating_imei_from_hex()
     {
         $payload = "383632323539353838383334323930";

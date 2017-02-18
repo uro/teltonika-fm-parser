@@ -2,7 +2,9 @@
 
 namespace Uro\TeltonikaFmParser\Model;
 
-class GpsData
+use JsonSerializable;
+
+class GpsData implements JsonSerializable
 {
     /**
      * @var float
@@ -139,5 +141,18 @@ class GpsData
         $speed = hexdec(substr($payload, $position, 4));
 
         return new GpsData($longitude, $latitude, $altitude, $angle, $satellites, $speed);
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'longitude' => $this->getLongitude(),
+            'latitude' => $this->getLatitude(),
+            'altitude' => $this->getAltitude(),
+            'angle' => $this->getAngle(),
+            'satellites' => $this->getSatellites(),
+            'speed' => $this->getSpeed(),
+            'hasGpsFix' => $this->hasGpsFix()
+        ];
     }
 }

@@ -3,8 +3,9 @@
 namespace Uro\TeltonikaFmParser\Model;
 
 use DateTimeImmutable;
+use JsonSerializable;
 
-class Data
+class Data implements Model, JsonSerializable
 {
     /**
      * @var DateTimeImmutable
@@ -57,6 +58,15 @@ class Data
     public function getSensorsData(): SensorsData
     {
         return $this->sensorsData;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'dateTime' => $this->getDateTime(),
+            'priority' => $this->getPriority(),
+            'gpsData' => $this->getGpsData()
+        ];
     }
 
     public static function createFromHex(string $payload, int &$position): Data
