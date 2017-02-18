@@ -1,4 +1,6 @@
-# Teltonika FM-XXXX Parser
+# Teltonika FM-XXXX Parser 
+
+[![Build Status](https://travis-ci.org/uro/teltonika-fm-parser.svg?branch=master)](https://travis-ci.org/uro/teltonika-fm-parser)
 
 This repository is object oriented library to translate Teltonika protocols.
 
