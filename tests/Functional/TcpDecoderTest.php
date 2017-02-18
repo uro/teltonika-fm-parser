@@ -4,6 +4,7 @@ namespace tests\Unit;
 
 use PHPUnit_Framework_TestCase;
 use Uro\TeltonikaFmParser\Decoder;
+use Uro\TeltonikaFmParser\Model\Data;
 use Uro\TeltonikaFmParser\Model\Imei;
 use Uro\TeltonikaFmParser\TcpDecoder;
 
@@ -46,10 +47,22 @@ class TcpDecoderTest extends PHPUnit_Framework_TestCase
 
         $data = $this->decoder->decodeData($payload);
 
-    }
+        // Has 4 elements
+        $this->assertEquals(4, count($data));
 
-    public function its_decoding_io_element()
-    {
+        foreach ($data as $element) {
+            $this->assertInstanceOf(Data::class, $element);
+        }
 
+        //Check first element
+        $first = reset($data);
+        $this->assertEquals(1185345998, $first->getDateTime()->getTimestamp());
+        $this->assertFalse($first->getGpsData()->hasGpsFix());
+        $this->assertEquals(25.3032016, $first->getGpsData()->getLongitude());
+        $this->assertEquals(54.7146368, $first->getGpsData()->getLatitude());
+        $this->assertEquals(111, $first->getGpsData()->getAltitude());
+        $this->assertEquals(214, $first->getGpsData()->getAngle());
+        $this->assertEquals(4, $first->getGpsData()->getSatellites());
+        $this->assertEquals(4, $first->getGpsData()->getSpeed());
     }
 }

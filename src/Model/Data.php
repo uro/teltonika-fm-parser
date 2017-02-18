@@ -19,7 +19,7 @@ class Data
     /**
      * @var GpsData
      */
-    private $gpsElement;
+    private $gpsData;
 
     /**
      * @var SensorsData
@@ -28,14 +28,14 @@ class Data
 
     public function __construct(
         DateTimeImmutable $dateTime,
-        GpsData $gpsElement,
+        GpsData $gpsData,
         SensorsData $sensorsData,
         string $priority
     )
     {
-        $this->dateTime= $dateTime;
+        $this->dateTime = $dateTime;
         $this->priority = $priority;
-        $this->gpsElement = $gpsElement;
+        $this->gpsData = $gpsData;
         $this->sensorsData = $sensorsData;
     }
 
@@ -51,7 +51,7 @@ class Data
 
     public function getGpsData(): GpsData
     {
-        return $this->gpsElement;
+        return $this->gpsData;
     }
 
     public function getSensorsData(): SensorsData
@@ -64,17 +64,17 @@ class Data
         $timestamp = hexdec(substr($payload, $position, 16));
 
         $dateTime = new DateTimeImmutable();
-        $dateTime->setTimestamp($timestamp / 1000); // Timestamp needs to be a float because its containing milliseconds
+        $dateTime = $dateTime->setTimestamp($timestamp / 1000); // Timestamp needs to be a float because its containing milliseconds
 
         $position += 16;
 
         $priority = hexdec(substr($payload, $position, 2));
         $position += 2;
 
-        $gpsElement = GpsData::createFromHex($payload, $position);
+        $gpsData = GpsData::createFromHex($payload, $position);
 
         $sensorsData = SensorsData::createFromHex($payload, $position);
 
-        return new Data($dateTime, $gpsElement, $sensorsData, $priority);
+        return new Data($dateTime, $gpsData, $sensorsData, $priority);
     }
 }
