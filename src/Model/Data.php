@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Uro\TeltonikaFmParser\Model;
 
 use DateTimeImmutable;
@@ -71,10 +73,10 @@ class Data implements Model, JsonSerializable
 
     public static function createFromHex(string $payload, int &$position): Data
     {
-        $timestamp = hexdec(substr($payload, $position, 16));
+        $timestamp = hexdec(substr($payload, $position, 16)) / 1000;
 
         $dateTime = new DateTimeImmutable();
-        $dateTime = $dateTime->setTimestamp($timestamp / 1000); // Timestamp needs to be a float because its containing milliseconds
+        $dateTime = $dateTime->setTimestamp(intval($timestamp)); // Timestamp needs to be a float because its containing milliseconds
 
         $position += 16;
 

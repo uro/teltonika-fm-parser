@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Uro\TeltonikaFmParser\Model;
 
 use JsonSerializable;
@@ -104,11 +106,11 @@ class GpsData implements JsonSerializable
     /**
      * If longitude is in west or latitude in south, multiply result by –1.
      *
-     * @param string $coordinate
+     * @param float $coordinate
      *
      * @return bool
      */
-    private function isNegative(string $coordinate): bool
+    private function isNegative(float $coordinate): bool
     {
         $binCoordinate = decbin($coordinate);
         if (strlen($binCoordinate) === 32) {
@@ -129,16 +131,16 @@ class GpsData implements JsonSerializable
         $latitude = (float)(hexdec($latitude) / 10000000);
         $position += 8;
 
-        $altitude = hexdec(substr($payload, $position, 4));
+        $altitude = (int)hexdec(substr($payload, $position, 4));
         $position += 4;
 
-        $angle = hexdec(substr($payload, $position, 4));
+        $angle = (int)hexdec(substr($payload, $position, 4));
         $position += 4;
 
-        $satellites = hexdec(substr($payload, $position, 2));
+        $satellites = (int)hexdec(substr($payload, $position, 2));
         $position += 2;
 
-        $speed = hexdec(substr($payload, $position, 4));
+        $speed = (int)hexdec(substr($payload, $position, 4));
 
         return new GpsData($longitude, $latitude, $altitude, $angle, $satellites, $speed);
     }
