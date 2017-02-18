@@ -98,7 +98,7 @@ class GpsData implements JsonSerializable
      */
     public function hasGpsFix(): bool
     {
-        return $this->angle && $this->speed && $this->satellites === 0;
+        return !((($this->angle === $this->speed) === $this->satellites) && ($this->satellites == 0));
     }
 
     /**

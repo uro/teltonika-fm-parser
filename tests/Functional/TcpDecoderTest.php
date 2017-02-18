@@ -56,7 +56,7 @@ class TcpDecoderTest extends PHPUnit_Framework_TestCase
         //Check first element
         $first = reset($data);
         $this->assertEquals(1185345998, $first->getDateTime()->getTimestamp());
-        $this->assertFalse($first->getGpsData()->hasGpsFix());
+        $this->assertTrue($first->getGpsData()->hasGpsFix());
         $this->assertEquals(25.3032016, $first->getGpsData()->getLongitude());
         $this->assertEquals(54.7146368, $first->getGpsData()->getLatitude());
         $this->assertEquals(111, $first->getGpsData()->getAltitude());

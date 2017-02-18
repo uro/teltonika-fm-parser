@@ -13,7 +13,7 @@ class Data implements Model, JsonSerializable
     private $dateTime;
 
     /**
-     * @var string
+     * @var int
      */
     private $priority;
 
@@ -31,7 +31,7 @@ class Data implements Model, JsonSerializable
         DateTimeImmutable $dateTime,
         GpsData $gpsData,
         SensorsData $sensorsData,
-        string $priority
+        int $priority
     )
     {
         $this->dateTime = $dateTime;
@@ -45,7 +45,7 @@ class Data implements Model, JsonSerializable
         return $this->dateTime;
     }
 
-    public function getPriority(): string
+    public function getPriority(): int
     {
         return $this->priority;
     }
@@ -78,7 +78,7 @@ class Data implements Model, JsonSerializable
 
         $position += 16;
 
-        $priority = hexdec(substr($payload, $position, 2));
+        $priority = (int)hexdec(substr($payload, $position, 2));
         $position += 2;
 
         $gpsData = GpsData::createFromHex($payload, $position);
