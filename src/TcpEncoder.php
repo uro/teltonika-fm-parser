@@ -8,7 +8,7 @@ use Uro\TeltonikaFmParser\Exception\InvalidArgumentException;
 
 class TcpEncoder implements Encoder
 {
-    public function encodeAuth(bool $isAuthenticated): string
+    public function encodeAuthentication(bool $isAuthenticated): string
     {
         if ($isAuthenticated) {
             return '01';
