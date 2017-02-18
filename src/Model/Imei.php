@@ -49,4 +49,11 @@ class Imei implements Model
 
         return array_sum(str_split($str)) % 10 === 0;
     }
+
+    public static function createFromHex(string $hexData): Imei
+    {
+        $imei = hex2bin($hexData);
+
+        return new Imei($imei);
+    }
 }

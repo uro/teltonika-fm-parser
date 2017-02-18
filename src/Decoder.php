@@ -2,6 +2,7 @@
 
 namespace Uro\TeltonikaFmParser;
 
+use Uro\TeltonikaFmParser\Model\Imei;
 use Uro\TeltonikaFmParser\Model\Model;
 
 interface Decoder
@@ -18,7 +19,7 @@ interface Decoder
     /**
      * @param string $payload
      *
-     * @return Model
+     * @return Model|Imei
      */
     public function decode(string $payload);
 }

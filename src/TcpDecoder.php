@@ -57,7 +57,7 @@ class TcpDecoder implements Decoder
     {
         $hexImei = substr($payload, 4);
 
-        return new Imei(hex2bin($hexImei));
+        return Imei::createFromHex($hexImei);
     }
 
     /**
@@ -70,7 +70,7 @@ class TcpDecoder implements Decoder
         $avlData = substr($payload, 16, -8);
 
         // Validating number of data;
-        if (substr($avlData, 2, 2) !== substr($avlData, strlen($avlData) -2, 2)) {
+        if (substr($avlData, 2, 2) !== substr($avlData, strlen($avlData) - 2, 2)) {
             throw new ParserException("Parsing error");
         }
 

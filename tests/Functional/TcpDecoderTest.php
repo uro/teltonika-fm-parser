@@ -20,7 +20,7 @@ class TcpDecoderTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function its_recognizing_payload_with_authentication()
+    public function is_recognizing_authentication_payload()
     {
         $imeiPayload = "000F313233343536373839303132333435";
         $payloadWithData = "00000000000000FE080400000113fc208dff00";
@@ -30,25 +30,13 @@ class TcpDecoderTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function its_decoding_imei()
+    public function is_decoding_authentication_payload()
     {
         $payload = "000F383632323539353838383334323930";
         $imei = $this->decoder->decode($payload);
 
         $this->assertEquals(Imei::class, get_class($imei));
-    }
-
-    /**
-     * @test
-     *
-     * @expectedException \Uro\TeltonikaFmParser\Model\Exception\InvalidArgumentException
-     * @expectedExceptionMessage IMEI number is not valid.
-     */
-    public function its_validating_wrong_imei()
-    {
-        $payload = "000F313233343536373839303132333435";
-
-        $this->decoder->decode($payload);
+        $this->assertEquals('862259588834290', $imei->getImei());
     }
 
     /** @test */
