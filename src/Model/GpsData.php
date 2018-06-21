@@ -115,6 +115,7 @@ class GpsData implements JsonSerializable
         $position += 2;
 
         $speed = (int)hexdec(substr($payload, $position, 4));
+        $position += 4;
 
         return new GpsData($longitude, $latitude, $altitude, $angle, $satellites, $speed);
     }
