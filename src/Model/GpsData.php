@@ -95,14 +95,17 @@ class GpsData implements JsonSerializable
         return !((($this->angle === $this->speed) === $this->satellites) && ($this->satellites == 0));
     }
 
+    public static function parseCoordinate($coordinate, $precision = 10000000)
+    {
+        return unpack('l', pack('l', hexdec($coordinate)))[1] / $precision;
+    }
+
     public static function createFromHex(string $payload, int &$position): GpsData
     {
-        $longitude = hexdec(substr($payload, $position, 8));
-        $longitude = (float)(($longitude & 0x7fffffff) / 10000000) * (($longitude >> 31) == 1 ? -1 : 1);
+        $longitude = self::parseCoordinate(substr($payload, $position, 8));
         $position += 8;
 
-        $latitude = hexdec(substr($payload, $position, 8));
-        $latitude = (float)(($latitude & 0x7fffffff) / 10000000) * (($latitude >> 31) == 1 ? -1 : 1);
+        $latitude = self::parseCoordinate(substr($payload, $position, 8));
         $position += 8;
 
         $altitude = (int)hexdec(substr($payload, $position, 4));
