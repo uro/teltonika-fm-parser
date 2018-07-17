@@ -47,14 +47,6 @@ class GpsData implements JsonSerializable
         int $speed
     )
     {
-        if ($this->isNegative($longitude)) {
-            $longitude *= -1;
-        }
-
-        if ($this->isNegative($latitude)) {
-            $longitude *= -1;
-        }
-
         $this->longitude = $longitude;
         $this->latitude = $latitude;
         $this->altitude = $altitude;
@@ -103,32 +95,17 @@ class GpsData implements JsonSerializable
         return !((($this->angle === $this->speed) === $this->satellites) && ($this->satellites == 0));
     }
 
-    /**
-     * If longitude is in west or latitude in south, multiply result by –1.
-     *
-     * @param float $coordinate
-     *
-     * @return bool
-     */
-    private function isNegative(float $coordinate): bool
+    public static function parseCoordinate($coordinate, $precision = 10000000)
     {
-        $binCoordinate = decbin($coordinate);
-        if (strlen($binCoordinate) === 32) {
-            return (int)substr($binCoordinate, 0, 1) === 1;
-        }
-
-        return false;
+        return unpack('l', pack('l', hexdec($coordinate)))[1] / $precision;
     }
 
     public static function createFromHex(string $payload, int &$position): GpsData
     {
-        $longitude = substr($payload, $position, 8);
-
-        $longitude = (float)(hexdec($longitude) / 10000000);
+        $longitude = self::parseCoordinate(substr($payload, $position, 8));
         $position += 8;
 
-        $latitude = substr($payload, $position, 8);
-        $latitude = (float)(hexdec($latitude) / 10000000);
+        $latitude = self::parseCoordinate(substr($payload, $position, 8));
         $position += 8;
 
         $altitude = (int)hexdec(substr($payload, $position, 4));
@@ -141,6 +118,7 @@ class GpsData implements JsonSerializable
         $position += 2;
 
         $speed = (int)hexdec(substr($payload, $position, 4));
+        $position += 4;
 
         return new GpsData($longitude, $latitude, $altitude, $angle, $satellites, $speed);
     }
