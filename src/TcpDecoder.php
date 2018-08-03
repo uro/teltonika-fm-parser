@@ -39,13 +39,13 @@ class TcpDecoder implements Decoder
      */
     public function decodeData(string $payload): array
     {
-        $crc = substr($payload, strlen($payload) - 8, 8);
+        $crc = substr($payload, \strlen($payload) - 8, 8);
 
         $avlDataWithChecks = substr($payload, 16, -8);
 
         // Validating number of data;
-        if (substr($avlDataWithChecks, 2, 2) !== substr($avlDataWithChecks, strlen($avlDataWithChecks) - 2, 2)) {
-            throw new ParserException("First element count check is different than last element count check");
+        if (substr($avlDataWithChecks, 2, 2) !== substr($avlDataWithChecks, \strlen($avlDataWithChecks) - 2, 2)) {
+            throw new ParserException('First element count check is different than last element count check');
         }
 
         $numberOfElements = hexdec(substr($avlDataWithChecks, 2, 2));
