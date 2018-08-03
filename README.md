@@ -1,6 +1,6 @@
 # Teltonika FM-XXXX Parser 
 
-[![Build Status](https://travis-ci.org/uro/teltonika-fm-parser.svg?branch=master)](https://travis-ci.org/uro/teltonika-fm-parser) [![Latest Stable Version](https://poser.pugx.org/uro/teltonika-fm-parser/v/stable)](https://packagist.org/packages/uro/teltonika-fm-parser) [![Total Downloads](https://poser.pugx.org/uro/teltonika-fm-parser/downloads)](https://packagist.org/packages/uro/teltonika-fm-parser)
+[![Build Status](https://travis-ci.org/uro/teltonika-fm-parser.svg?branch=master)](https://travis-ci.org/uro/teltonika-fm-parser) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/uro/teltonika-fm-parser/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/uro/teltonika-fm-parser/?branch=master) [![CodeFactor](https://www.codefactor.io/repository/github/uro/teltonika-fm-parser/badge)](https://www.codefactor.io/repository/github/uro/teltonika-fm-parser) [![Latest Stable Version](https://poser.pugx.org/uro/teltonika-fm-parser/v/stable)](https://packagist.org/packages/uro/teltonika-fm-parser) [![Total Downloads](https://poser.pugx.org/uro/teltonika-fm-parser/downloads)](https://packagist.org/packages/uro/teltonika-fm-parser)
 
 This repository is object oriented library to translate Teltonika protocols.
 
