@@ -1,1 +1,3 @@
 vendor
+cov.xml
+.vscode
