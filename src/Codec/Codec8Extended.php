@@ -21,7 +21,7 @@ class Codec8Extended extends BaseCodec
         $properties = [];
         for($bytes = 1; $bytes <= 8; $bytes *= 2) {
             $numberOfProperties = $this->reader->readUInt16();
-            foreach(range(1,$numberOfProperties) as $i) {
+            for($i = 0; $i < $numberOfProperties; $i++) {
                 $properties[] = new IoProperty(
                     $this->reader->readUInt16(),
                     new IoValue($this->reader->readBytes($bytes))
@@ -37,7 +37,7 @@ class Codec8Extended extends BaseCodec
         $properties = [];
 
         $numberOfProperties = $this->reader->readUInt16();
-        foreach(range(1, $numberOfProperties) as $i) {
+        for($i = 0; $i < $numberOfProperties; $i++) {
             $properties[] = new IoProperty(
                 $this->reader->readUInt16(),
                 new IoValue($this->reader->readBytes($this->reader->readUInt16()))
