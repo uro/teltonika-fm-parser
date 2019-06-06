@@ -9,6 +9,6 @@ class Encoder implements IEncoder
 {
     public function encodeAcknowledge(Acknowledgeable $ack)
     {
-        return pack('L', $ack->numberOfAcceptedData());
+        return pack('L', $ack->getNumberOfAcceptedData());
     }
 }
