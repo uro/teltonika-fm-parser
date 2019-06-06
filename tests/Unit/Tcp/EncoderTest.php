@@ -13,7 +13,7 @@ class EncoderTest extends TestCase
     public function can_encode_acknowledge()
     {
         $packet = Mockery::mock(Acknowledgeable::class)
-                    ->shouldReceive('numberOfAcceptedData')
+                    ->shouldReceive('getNumberOfAcceptedData')
                     ->andReturns(2)->getMock();
 
         $ack = (new Encoder)->encodeAcknowledge($packet);
