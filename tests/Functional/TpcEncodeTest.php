@@ -13,7 +13,7 @@ class TcpEncodeTest extends TestCase
     public function can_encode_tcp_acknowledge()
     {
         $packet = Mockery::mock(Acknowledgeable::class)
-                    ->shouldReceive('numberOfAcceptedData')
+                    ->shouldReceive('getNumberOfAcceptedData')
                     ->andReturns(2)->getMock();
 
         $ack = (new FmParser('tcp'))->encodeAcknowledge($packet);
