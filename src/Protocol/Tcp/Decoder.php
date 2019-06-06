@@ -7,6 +7,7 @@ use Uro\TeltonikaFmParser\Codec\Codec8;
 use Uro\TeltonikaFmParser\Codec\Codec8Extended;
 use Uro\TeltonikaFmParser\Exception\UnsupportedCodecException;
 use Uro\TeltonikaFmParser\Model\Imei;
+use Uro\TeltonikaFmParser\Exception\CrcMismatchException;
 
 class Decoder 
 {
@@ -30,12 +31,31 @@ class Decoder
     {
         $this->reader = new Reader($data);
 
-        return new Packet(
+        $packet = new Packet(
             $this->reader->readUInt32(),                // Preamble
             $this->reader->readUInt32(),                // Avl Data array length
             $this->codec()->decodeAvlDataCollection(),  // Avl Data collection
             $this->reader->readUInt32()                 // CRC
         );
+
+        if(! $packet->checkCrc($this->crcInput())) {
+            throw new CrcMismatchException;
+        }
+
+        return $packet;
+    }
+
+    private function crcInput()
+    {
+        $this->reader->setPosition(0);
+        $packetString = bin2hex($this->reader->getInputString());
+        $crcInput = substr(
+            $packetString, 
+            16,
+            strlen($packetString) - 24      
+        );
+
+        return hex2bin($crcInput); 
     }
 
     private function codec()
