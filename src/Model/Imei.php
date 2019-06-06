@@ -1,13 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Uro\TeltonikaFmParser\Model;
 
-use JsonSerializable;
-use Uro\TeltonikaFmParser\Model\Exception\InvalidArgumentException;
+use Uro\TeltonikaFmParser\Exception\InvalidArgumentException;
 
-class Imei implements Model, JsonSerializable
+class Imei extends Model
 {
     const IMEI_LENGTH = 15;
 
@@ -17,17 +14,17 @@ class Imei implements Model, JsonSerializable
     private $imei;
 
     /**
-     * @param string $imei
+     * @param mixed $imei
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(string $imei)
+    public function __construct($imei)
     {
+        $this->imei = $imei;
+
         if (!$this->isLuhn($imei) || strlen($imei) !== self::IMEI_LENGTH) {
             throw new InvalidArgumentException("IMEI number is not valid.");
         }
-
-        $this->imei = $imei;
     }
 
     /**
@@ -36,13 +33,6 @@ class Imei implements Model, JsonSerializable
     public function getImei(): string
     {
         return $this->imei;
-    }
-
-    public function jsonSerialize(): array
-    {
-        return [
-            'imei' => $this->getImei()
-        ];
     }
 
     public function __toString(): string
@@ -55,20 +45,13 @@ class Imei implements Model, JsonSerializable
      *
      * @return bool
      */
-    private function isLuhn(string $imei): bool
+    public function isLuhn(): bool
     {
         $str = '';
-        foreach (str_split(strrev((string)$imei)) as $i => $d) {
+        foreach (str_split(strrev($this->imei)) as $i => $d) {
             $str .= $i % 2 !== 0 ? $d * 2 : $d;
         }
 
         return array_sum(str_split($str)) % 10 === 0;
-    }
-
-    public static function createFromHex(string $hexData): Imei
-    {
-        $imei = hex2bin($hexData);
-
-        return new Imei($imei);
     }
 }
