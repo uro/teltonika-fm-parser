@@ -2,6 +2,7 @@
 
 namespace Uro\TeltonikaFmParser\Protocol\Tcp;
 
+use Uro\TeltonikaFmParser\Support\Crc16;
 use Uro\TeltonikaFmParser\Model\AvlDataCollection;
 use Uro\TeltonikaFmParser\Support\Acknowledgeable;
 
@@ -76,5 +77,15 @@ class Packet implements Acknowledgeable
     public function getCrc(): int
     {
         return $this->crc;
+    }
+
+    /**
+     * Check if packet CRC equals calculated CRC
+     *
+     * @return boolean
+     */
+    public function checkCrc(string $input): bool
+    {
+        return $this->crc == (new Crc16)->calc($input);
     }
 }

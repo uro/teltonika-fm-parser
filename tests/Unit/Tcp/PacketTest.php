@@ -15,7 +15,7 @@ class PacketTest extends TestCase
     public function setUp()
     {
         $this->avlDataCollection = new AvlDataCollection(8, 2, []);
-        $this->packet = new Packet(0, 2, $this->avlDataCollection, 0x00008612);
+        $this->packet = new Packet(0, 2, $this->avlDataCollection, 0x2b60);
     }
 
     /** @test */
@@ -45,6 +45,18 @@ class PacketTest extends TestCase
     /** @test */
     public function can_get_crc()
     {
-        $this->assertEquals(0x00008612, $this->packet->getCrc());
+        $this->assertEquals(0x2b60, $this->packet->getCrc());
+    }
+
+    /** @test */
+    public function can_check_crc_valid_data()
+    {
+        $this->assertTrue($this->packet->checkCrc(hex2bin('8e0000')));
+    }
+
+    /** @test */
+    public function can_check_crc_invalid_data()
+    {
+        $this->assertFalse($this->packet->checkCrc(hex2bin('8f0000')));
     }
 }
