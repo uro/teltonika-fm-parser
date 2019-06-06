@@ -50,10 +50,10 @@ $packet = $parser->decodeData($payload);
 			$imei = $parser->decodeImei($payload);
 
 			// Accept packet
-			fwrite($conn, 1);
+			fwrite($conn, Reply::accept());
 
 			// Decline packet
-			// fwrite($conn, 0);
+			// fwrite($conn, Reply::reject());
 			
 			// Read Data
 			$payload = fread($conn, 1024);
