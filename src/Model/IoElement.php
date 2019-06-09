@@ -52,6 +52,16 @@ class IoElement extends Model
     }
 
     /**
+     * Get properties
+     *
+     * @return array
+     */
+    public function getProperties(): array 
+    {
+        return $this->properties;
+    }
+
+    /**
      * Get IO property by ID
      *
      * @param integer $id
