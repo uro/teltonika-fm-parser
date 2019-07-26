@@ -20,6 +20,6 @@ class EncoderTest extends TestCase
 
         $this->assertNotNull($ack);
         $this->assertEquals(4, strlen($ack));
-        $this->assertEquals(2, unpack('L', $ack)[1]);
+        $this->assertEquals(00000002, bin2hex($ack));
     }
 }
