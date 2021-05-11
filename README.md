@@ -23,90 +23,55 @@ It was build with [Teltonika protocols v2.10](FMXXXX_Protocols_v2.10.pdf) docume
 
 ## Usage:
 
-Authentication decode:
 ```php
-// Recieve data from tcp socket
-$payloadFromDevice = "000F313233343536373839303132333435";
+$parser = new FmParser('tcp');
 
-// Decode recieved data
-$decoder = new TcpDecoder();
+// Decode IMEI
+$imei = $parser->decodeImei($payload);
 
-// Check if data which we recieved are authentication or Gps records
-if($decoder->isAuthentication($payloadFromDevice)){ // returns true;
-    
-    $imei = $decoder->decodeAuthentication($payloadFromDevice);
-    echo json_encode(imei);
-    
-    // Check if device is authenticated in your system, and then encode response for device
-    $encoder = new TcpEncoder();
-    $payload = $encoder->encodeAuthentication(true); // Yes, device was authenticated successfully
-
-    // send $payload though the socket.
-}
+// Decode Data Packet
+$packet = $parser->decodeData($payload);
 ```
-Echo will return:
-```json
-{
-    "imei": "862259588834290"
-}
-```
+
+## Examples
+
+### TCP
 
 ```php
-// Now we need to wait for next data from the device
+	$parser = new FmParser('tcp');
+	$socket = stream_socket_server("tcp://0.0.0.0:8043", $errno, $errstr);
+	if (!$socket) {
+		throw new \Exception("$errstr ($errno)");
+	} else {
+		while ($conn = stream_socket_accept($socket)) {
 
-// Recieve next payload from the socket (now with data)
-$tcpPayloadFromDevice = "00000000000000FE080400000113fc208dff000f14f650209cca80006f...";
+			// Read IMEI
+			$payload = fread($conn, 1024);
+			$imei = $parser->decodeImei($payload);
 
-// Decode it
-$data = $this->decoder->decodeData($payload);
+			// Accept packet
+			fwrite($conn, Reply::accept());
 
-echo json_encode(data);
-```
-Echo will return:
-```json
-[{
-	"dateTime": {
-		"date": "2007-07-25 06:46:38.000000",
-		"timezone_type": 3,
-		"timezone": "UTC"
-	},
-	"priority": 0,
-	"gpsData": {
-		"longitude": 25.3032016,
-		"latitude": 54.7146368,
-		"altitude": 111,
-		"angle": 214,
-		"satellites": 4,
-		"speed": 4,
-		"hasGpsFix": true
+			// Decline packet
+			// fwrite($conn, Reply::reject());
+			
+			// Read Data
+			$payload = fread($conn, 1024);
+			$packet = $parser->decodeData($payload);
+
+			// Send acknowledge
+			fwrite($conn, $parser->encodeAcknowledge($packet));
+
+			// Close connection
+			fclose($conn);
+		}
+
+		fclose($socket);
 	}
-}, {
-	"dateTime": {
-		"date": "2007-07-25 06:46:38.000000",
-		"timezone_type": 3,
-		"timezone": "UTC"
-	},
-	"priority": 0,
-	"gpsData": {
-		"longitude": 25.3032016,
-		"latitude": 54.7146368,
-		"altitude": 111,
-		"angle": 214,
-		"satellites": 4,
-		"speed": 4,
-		"hasGpsFix": true
-	}
-}]
+}
 ```
 
-See tests for more examples!
 
-## Todo:
-
-- [x] Implement TCP protocol (encode and decode)
-- [ ] Implement gps sensors data (IOElement)
-- [ ] Implement UDP protocol (encode and decode)
-- [ ] Implement SMS protocol
 
 ## License:
 
