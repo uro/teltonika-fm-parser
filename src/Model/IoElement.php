@@ -1,89 +1,55 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace Uro\TeltonikaFmParser\Model;
 
 class IoElement extends Model
 {
     /**
-     * ID of event generated. 0 if data generated not on event
-     *
-     * @var int
+     * @var IoProperty[]
      */
-    private $eventId;
+    private array $properties;
 
-    /**
-     * Number of IO properties in record
-     *
-     * @var int
-     */
-    private $numberOfElements;
-
-    /**
-     * IO properties in record
-     *
-     * @var array
-     */
-    private $properties;
-
-    public function __construct(int $eventId, int $numberOfElements)
+    public function __construct(private readonly int $eventId, private readonly int $numberOfElements)
     {
-        $this->eventId = $eventId;
-        $this->numberOfElements = $numberOfElements;
     }
 
-    /**
-     * Get event ID
-     *
-     * @return int
-     */
     public function getEventId(): int
     {
         return $this->eventId;
     }
 
-    /**
-     * Get number of elements
-     *
-     * @return int
-     */
     public function getNumberOfElements(): int
     {
         return $this->numberOfElements;
     }
 
-    /**
-     * Get properties
-     *
-     * @return array
-     */
-    public function getProperties(): array 
+    public function getProperties(): array
     {
         return $this->properties;
     }
 
-    /**
-     * Get IO property by ID
-     *
-     * @param integer $id
-     * @param mixed $default
-     * @return IoProperty
-     */
-    public function getPropertyById($id, $default = null)
+    public function getPropertyById(int $id): ?IoProperty
     {
-        return $this->properties[$id] ?? $default;
+        return $this->properties[$id];
     }
 
     /**
-     * Add properties to element
-     *
-     * @param array $properties
-     * @return void
+     * @param IoProperty[] $properties
      */
     public function addProperties(array $properties): IoElement
     {
-        foreach($properties as $property) {
-            $this->properties[$property->getId()] = $property;
+        foreach ($properties as $property) {
+            $this->addProperty($property);
         }
+
+        return $this;
+    }
+
+    public function addProperty(IoProperty $property): IoElement
+    {
+        $this->properties[$property->getId()] = $property;
 
         return $this;
     }

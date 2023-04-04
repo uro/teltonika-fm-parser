@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Uro\TeltonikaFmParser\Model;
 
-abstract class Model implements \JsonSerializable
+use JsonSerializable;
+
+abstract class Model implements JsonSerializable
 {
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
-       return  get_object_vars($this);
+        return get_object_vars($this);
     }
 }

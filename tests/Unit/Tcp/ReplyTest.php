@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Unit\Protocol\Tcp;
 
@@ -7,8 +9,10 @@ use Uro\TeltonikaFmParser\Protocol\Tcp\Reply;
 
 class ReplyTest extends TestCase
 {
-    /** @test */
-    public function can_get_accept_reply()
+    /**
+     * @test
+     */
+    public function can_get_accept_reply(): void
     {
         $reply = Reply::accept();
 
@@ -16,8 +20,10 @@ class ReplyTest extends TestCase
         $this->assertEquals('01', bin2hex($reply));
     }
 
-    /** @test */
-    public function can_get_reject_reply()
+    /**
+     * @test
+     */
+    public function can_get_reject_reply(): void
     {
         $reply = Reply::reject();
 

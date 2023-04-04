@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Unit\Model;
 
@@ -8,19 +10,23 @@ use Uro\TeltonikaFmParser\Model\IoValue;
 
 class IoPropertyTest extends TestCase
 {
-    /** @test */
-    public function can_get_property_id()
+    /**
+     * @test
+     */
+    public function can_get_property_id(): void
     {
-        $id = (new IoProperty(1, new IoValue(0)))->getId();
+        $id = (new IoProperty(1, new IoValue('0')))->getId();
 
         $this->assertNotNull($id);
         $this->assertEquals(1, $id);
     }
 
-    /** @test */
-    public function can_get_property_value()
+    /**
+     * @test
+     */
+    public function can_get_property_value(): void
     {
-        $original = new IoValue(0);
+        $original = new IoValue('0');
         $value = (new IoProperty(1, $original))->getValue();
 
         $this->assertNotNull($value);

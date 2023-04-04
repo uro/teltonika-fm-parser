@@ -1,11 +1,12 @@
-<?php 
+<?php
 
 namespace Tests\Functional;
 
 use PHPUnit\Framework\TestCase;
+use Uro\TeltonikaFmParser\Exception\CrcMismatchException;
 use Uro\TeltonikaFmParser\FmParser;
 
-class TcpDecodeTest extends TestCase 
+class TcpDecodeTest extends TestCase
 {
     /** @test */
     public function can_decode_imei()
@@ -32,12 +33,12 @@ class TcpDecodeTest extends TestCase
         $this->assertEquals(0x00002b60, $packet->getCrc());
     }
 
-    /** 
-     * @test 
-     * @expectedException Uro\TeltonikaFmParser\Exception\CrcMismatchException
+    /**
+     * @test
      */
     public function invalid_crc_throws_crc_mismatch_exception()
     {
+        $this->expectException(CrcMismatchException::class);
         (new FmParser('tcp'))->decodeData(
             '0000000000000003'.     // AVL Packet header
             '8E'.                   // Codec 8 ID
