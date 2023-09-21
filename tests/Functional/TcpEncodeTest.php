@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Tests\Functional;
 
@@ -7,9 +7,11 @@ use PHPUnit\Framework\TestCase;
 use Uro\TeltonikaFmParser\FmParser;
 use Uro\TeltonikaFmParser\Support\Acknowledgeable;
 
-class TcpEncodeTest extends TestCase 
+class TcpEncodeTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test
+     */
     public function can_encode_tcp_acknowledge()
     {
         $packet = Mockery::mock(Acknowledgeable::class)

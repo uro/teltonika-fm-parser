@@ -1,15 +1,19 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace Uro\TeltonikaFmParser\Support\Testing;
 
 use Uro\TeltonikaFmParser\Io\Reader;
 
-trait Test15BytesGpsElement 
+trait Test15BytesGpsElement
 {
-    protected abstract function codecClass();
+    abstract protected function codecClass();
 
-    /** @test */
-    public function can_decode_gps_element()
+    /**
+     * @test
+     */
+    public function can_decode_gps_element(): void
     {
         $reader = new Reader($this->validGpsElement());
         $codec = $this->codecClass();
@@ -19,7 +23,7 @@ trait Test15BytesGpsElement
         $this->assertGpsElement($gpsElement);
     }
 
-    protected function assertGpsElement($gpsElement)
+    protected function assertGpsElement($gpsElement): void
     {
         $this->assertNotNull($gpsElement);
         $this->assertEquals(25.3032016, $gpsElement->getLongitude());
@@ -30,9 +34,9 @@ trait Test15BytesGpsElement
         $this->assertEquals(6, $gpsElement->getSpeed());
     }
 
-    protected function validGpsElement()
+    protected function validGpsElement(): string
     {
-        return 
+        return
             '0f14f650'.                     // Longitude 253032016 = 25,3032016o N
             '209cca80'.                     // Latitude 547146368 = 54,7146368 o E
             '006f'.                         // Altitude 111 meters

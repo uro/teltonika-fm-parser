@@ -1,22 +1,24 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace Uro\TeltonikaFmParser\Codec;
 
+use Uro\TeltonikaFmParser\Exception\NumberOfDataMismatchException;
 use Uro\TeltonikaFmParser\Io\Reader;
 use Uro\TeltonikaFmParser\Model\AvlData;
-use Uro\TeltonikaFmParser\Model\GpsElement;
 use Uro\TeltonikaFmParser\Model\AvlDataCollection;
-use Uro\TeltonikaFmParser\Exception\NumberOfDataMismatchException;
+use Uro\TeltonikaFmParser\Model\GpsElement;
 
 abstract class BaseCodec implements Codec
 {
-    protected $reader;
-
-    public function __construct(Reader $reader)
+    public function __construct(protected readonly Reader $reader)
     {
-        $this->reader = $reader;
     }
 
+    /**
+     * @throws NumberOfDataMismatchException
+     */
     public function decodeAvlDataCollection(): AvlDataCollection
     {
         $avlDataCollection = new AvlDataCollection(
@@ -25,22 +27,25 @@ abstract class BaseCodec implements Codec
         );
 
         $avlData = [];
-        for($i = 0; $i < $avlDataCollection->getNumberOfData(); $i++) {
+        for ($i = 0; $i < $avlDataCollection->getNumberOfData(); $i++) {
             $avlData[] = $this->decodeAvlData();
         }
         $avlDataCollection->setAvlData($avlData);
 
         $this->checkNumberOfData($avlDataCollection->getNumberOfData());
-        
+
         return $avlDataCollection;
     }
 
-    private function checkNumberOfData($expected)
+    /**
+     * @throws NumberOfDataMismatchException
+     */
+    private function checkNumberOfData(int $expected): void
     {
         $lastNumberOfData = $this->reader->readUInt8();
-        if($expected != $lastNumberOfData) {
+        if ($expected !== $lastNumberOfData) {
             throw new NumberOfDataMismatchException(
-                $expected, 
+                $expected,
                 $lastNumberOfData
             );
         }
@@ -49,8 +54,8 @@ abstract class BaseCodec implements Codec
     public function decodeAvlData(): AvlData
     {
         return new AvlData(
-            $this->reader->readUInt64(),    // Timestamp
-            $this->reader->readUInt8(),     // Priority
+            (int)$this->reader->readUInt64(),    // Timestamp
+            (int)$this->reader->readUInt8(),     // Priority
             $this->decodeGpsElement(),      // GPS Element
             $this->decodeIoElement()        // IO Element
         );
@@ -61,15 +66,17 @@ abstract class BaseCodec implements Codec
         return new GpsElement(
             $this->decodeCoordinate(),      // Longitude
             $this->decodeCoordinate(),      // Latitude
-            $this->reader->readUInt16(),    // Altitude
-            $this->reader->readUInt16(),    // Angle
-            $this->reader->readUInt8(),     // Satellites
-            $this->reader->readUInt16()     // Speed
+            (int)$this->reader->readUInt16(),    // Altitude
+            (int)$this->reader->readUInt16(),    // Angle
+            (int)$this->reader->readUInt8(),     // Satellites
+            (int)$this->reader->readUInt16()     // Speed
         );
     }
 
     protected function decodeCoordinate(): float
     {
-        return unpack('l', pack('l', $this->reader->readUInt32()))[1] / 10000000;
+        $raw = (array)unpack('l', pack('l', $this->reader->readUInt32()));
+
+        return $raw[1] / 10000000;
     }
 }

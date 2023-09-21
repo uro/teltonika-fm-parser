@@ -6,10 +6,10 @@ namespace Uro\TeltonikaFmParser\Exception;
 
 use Exception;
 
-class CrcMismatchException extends Exception
+class CrcCalculationException extends Exception
 {
     public function __construct()
     {
-        parent::__construct('Provided CRC is different than calculated CRC');
+        parent::__construct('CRC calculation failed');
     }
 }

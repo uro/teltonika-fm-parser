@@ -2,7 +2,7 @@
 
 namespace Uro\TeltonikaFmParser\Support;
 
-interface Acknowledgeable 
+interface Acknowledgeable
 {
     public function getNumberOfAcceptedData(): int;
 }

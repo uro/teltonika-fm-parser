@@ -1,35 +1,43 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace Uro\TeltonikaFmParser;
 
+use Uro\TeltonikaFmParser\Model\Imei;
+use Uro\TeltonikaFmParser\Protocol\Tcp\Packet;
 use Uro\TeltonikaFmParser\Support\Acknowledgeable;
 
-class FmParser 
+class FmParser
 {
-    private $decoder;
+    private DecoderInterface $decoder;
 
-    public function __construct($protocol)
+    private EncoderInterface $encoder;
+
+    public function __construct(string $protocol)
     {
         $namespace = 'Uro\\TeltonikaFmParser\\Protocol\\' . ucfirst($protocol) . '\\';
 
-        $decoder = $namespace . 'Decoder';
-        $this->decoder = new $decoder;
-        
-        $encoder = $namespace . 'Encoder';
-        $this->encoder = new $encoder;
+        /** @var DecoderInterface $decoder */
+        $decoder = new ($namespace . 'Decoder');
+        $this->decoder = $decoder;
+
+        /** @var EncoderInterface $encoder */
+        $encoder = new ($namespace . 'Encoder');
+        $this->encoder = new $encoder();
     }
 
-    public function decodeImei($data)
+    public function decodeImei(string $data): Imei
     {
         return $this->decoder->decodeImei($data);
     }
 
-    public function decodeData($data)
+    public function decodeData(string $data): Packet
     {
         return $this->decoder->decodeData($data);
     }
 
-    public function encodeAcknowledge(Acknowledgeable $acknowledgeable)
+    public function encodeAcknowledge(Acknowledgeable $acknowledgeable): string
     {
         return $this->encoder->encodeAcknowledge($acknowledgeable);
     }

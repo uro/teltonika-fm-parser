@@ -1,14 +1,16 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace Uro\TeltonikaFmParser\Protocol\Tcp;
 
-use Uro\TeltonikaFmParser\Encoder as IEncoder;
+use Uro\TeltonikaFmParser\EncoderInterface;
 use Uro\TeltonikaFmParser\Support\Acknowledgeable;
 
-class Encoder implements IEncoder
+class Encoder implements EncoderInterface
 {
-    public function encodeAcknowledge(Acknowledgeable $ack)
+    public function encodeAcknowledge(Acknowledgeable $acknowledgeable): string
     {
-        return pack('N', $ack->getNumberOfAcceptedData());
+        return pack('N', $acknowledgeable->getNumberOfAcceptedData());
     }
 }

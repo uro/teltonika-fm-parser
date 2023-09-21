@@ -1,35 +1,49 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace Uro\TeltonikaFmParser\Protocol\Tcp;
 
-use Uro\TeltonikaFmParser\Io\Reader;
+use Uro\TeltonikaFmParser\Codec\BaseCodec;
 use Uro\TeltonikaFmParser\Codec\Codec8;
 use Uro\TeltonikaFmParser\Codec\Codec8Extended;
-use Uro\TeltonikaFmParser\Exception\UnsupportedCodecException;
-use Uro\TeltonikaFmParser\Model\Imei;
+use Uro\TeltonikaFmParser\DecoderInterface;
 use Uro\TeltonikaFmParser\Exception\CrcMismatchException;
+use Uro\TeltonikaFmParser\Exception\InvalidArgumentException;
+use Uro\TeltonikaFmParser\Exception\NumberOfDataMismatchException;
+use Uro\TeltonikaFmParser\Exception\UnsupportedCodecException;
+use Uro\TeltonikaFmParser\Io\Reader;
+use Uro\TeltonikaFmParser\Model\Imei;
 
-class Decoder 
+class Decoder implements DecoderInterface
 {
-    private $reader;
+    private Reader $reader;
 
-    protected $codecs = [
+    /**
+     * @var string[]
+     */
+    private array $codecs = [
         0x08 => Codec8::class,
         0x8E => Codec8Extended::class,
     ];
 
-    public function decodeImei($data)
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function decodeImei(string $payload): Imei
     {
-        $this->reader = new Reader($data);
+        $this->reader = new Reader($payload);
+        $numberOfBytes = (int)$this->reader->readUInt16();
 
-        $numberOfBytes = $this->reader->readUInt16();
-
-        return new Imei($this->reader->readBytes($numberOfBytes));
+        return new Imei((string)$this->reader->readBytes($numberOfBytes));
     }
 
-    public function decodeData($data)
+    /**
+     * @throws UnsupportedCodecException|NumberOfDataMismatchException|CrcMismatchException
+     */
+    public function decodeData(string $payload): Packet
     {
-        $this->reader = new Reader($data);
+        $this->reader = new Reader($payload);
 
         $packet = new Packet(
             $this->reader->readUInt32(),                // Preamble
@@ -38,35 +52,47 @@ class Decoder
             $this->reader->readUInt32()                 // CRC
         );
 
-        if(! $packet->checkCrc($this->crcInput())) {
-            throw new CrcMismatchException;
+        if (!$packet->checkCrc($this->crcInput())) {
+            throw new CrcMismatchException();
         }
 
         return $packet;
     }
 
-    private function crcInput()
+    /**
+     * @throws CrcMismatchException
+     */
+    private function crcInput(): string
     {
         $this->reader->setPosition(0);
         $packetString = bin2hex($this->reader->getInputString());
         $crcInput = substr(
-            $packetString, 
+            $packetString,
             16,
-            strlen($packetString) - 24      
+            strlen($packetString) - 24
         );
 
-        return hex2bin($crcInput); 
+        $result = hex2bin($crcInput);
+        if ($result === false) {
+            throw new CrcMismatchException();
+        }
+
+        return $result;
     }
 
-    private function codec()
+    /**
+     * @throws UnsupportedCodecException
+     */
+    private function codec(): BaseCodec
     {
         $position = $this->reader->getPosition();
         $codecId = $this->reader->readUInt8();
 
-        if(! array_key_exists($codecId, $this->codecs)) {
-            throw new UnsupportedCodecException($codecId);
+        if (!array_key_exists($codecId, $this->codecs)) {
+            throw new UnsupportedCodecException((int) $codecId);
         }
 
+        /** @var BaseCodec $codec */
         $codec = new $this->codecs[$codecId]($this->reader);
 
         $this->reader->setPosition($position);

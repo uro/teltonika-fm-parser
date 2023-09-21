@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Unit\Protocol\Tcp;
 
@@ -9,8 +11,10 @@ use Uro\TeltonikaFmParser\Protocol\Tcp\Encoder;
 
 class EncoderTest extends TestCase
 {
-    /** @test */
-    public function can_encode_acknowledge()
+    /**
+     * @test
+     */
+    public function can_encode_acknowledge(): void
     {
         $packet = Mockery::mock(Acknowledgeable::class)
                     ->shouldReceive('getNumberOfAcceptedData')

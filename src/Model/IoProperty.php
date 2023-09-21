@@ -1,53 +1,21 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace Uro\TeltonikaFmParser\Model;
 
-use Uro\TeltonikaFmParser\Model\IoValue;
-
 class IoProperty extends Model
 {
-    /**
-     * Property ID in AVL Packet
-     *
-     * @var int
-     */
-    private $id;
-
-    /**
-     * Property value
-     *
-     * @var IoValue
-     */
-    private $value;
-
-    /**
-     * IO property
-     *
-     * @param integer $id
-     * @param IoValue $value
-     */
-    public function __construct($id, IoValue $value)
+    public function __construct(private readonly int $id, private readonly IoValue $value)
     {
-        $this->id = $id;
-        $this->value = $value;
     }
 
-    /**
-     * Get property ID
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Get property value
-     *
-     * @return IoValue
-     */
-    public function getValue()
+    public function getValue(): IoValue
     {
         return $this->value;
     }

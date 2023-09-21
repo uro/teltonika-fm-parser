@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace Uro\TeltonikaFmParser\Model;
 
@@ -6,71 +8,60 @@ use Uro\TeltonikaFmParser\Exception\IoValueLengthException;
 
 class IoValue extends Model
 {
-    private $binary;
-
-    public function __construct($binary)
+    public function __construct(private readonly string $binary)
     {
-        $this->binary = $binary;
     }
 
-    public function toHex()
+    public function toHex(): string
     {
         return bin2hex($this->binary);
     }
 
-    public function toUnsigned()
+    /**
+     * @throws IoValueLengthException
+     */
+    public function toUnsigned(): int
     {
-        switch(strlen($this->binary)) {
-            case 1:
-                $format = 'C';
-                break;
-            case 2:
-                $format = 'S';
-                break;
-            case 4:
-                $format = 'L';
-                break;
+        $format = match (strlen($this->binary)) {
+            1 => 'C',
+            2 => 'S',
+            4 => 'L',
+            default => throw new IoValueLengthException(strlen($this->binary)),
+        };
 
-            default:
-                throw new IoValueLengthException(strlen($this->binary));
-        }
+        return (int)$this->format($format);
+    }
+
+    /**
+     * @throws IoValueLengthException
+     */
+    public function toSigned(): int
+    {
+        $format = match (strlen($this->binary)) {
+            1 => 'c',
+            2 => 's',
+            4 => 'l',
+            default => throw new IoValueLengthException(strlen($this->binary)),
+        };
 
         return $this->format($format);
     }
 
-    public function toSigned()
+    private function format(string $format): int
     {
-        switch(strlen($this->binary)) {
-            case 1:
-                $format = 'c';
-                break;
-            case 2:
-                $format = 's';
-                break;
-            case 4:
-                $format = 'l';
-                break;
+        $raw = (array)unpack($format, pack($format, hexdec($this->toHex())));
 
-            default:
-                throw new IoValueLengthException(strlen($this->binary));
-        }
-
-        return $this->format($format);
+        return $raw[1];
     }
 
-    private function format(string $format)
-    {
-        return unpack($format, pack($format, hexdec($this->toHex())))[1];
-    }
-
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
-            'value' => $this->toHex()
+            'value' => $this->toHex(),
         ];
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toHex();
     }

@@ -1,35 +1,40 @@
-<?php 
+<?php
+
+declare(strict_types=1);
 
 namespace Uro\TeltonikaFmParser\Support\Testing;
 
+use Uro\TeltonikaFmParser\Exception\NumberOfDataMismatchException;
 use Uro\TeltonikaFmParser\Io\Reader;
 
 trait TestAvlData
 {
-    protected abstract function codecClass();
+    abstract protected function codecClass(): string;
 
-    protected abstract function assertGpsElement($gpsElement);
+    abstract protected function assertGpsElement($gpsElement): void;
 
-    protected abstract function assertIoElement($ioElement);
+    abstract protected function assertIoElement($ioElement): void;
 
-    /** @test 
-     * @expectedException Uro\TeltonikaFmParser\Exception\NumberOfDataMismatchException
-     * @codeCoverageIgnore
+    /**
+     * @test
      */
-    public function number_of_data_mismatch_throw_exception()
+    public function number_of_data_mismatch_throw_exception(): void
     {
+        $this->expectException(NumberOfDataMismatchException::class);
         $reader = new Reader(
             '08'.                           // Codec ID
             '00'.                           // Number of data
             '01'                            // Different number of data
-        );         
-        $codec = $this->codecClass();       
-        
+        );
+        $codec = $this->codecClass();
+
         (new $codec($reader))->decodeAvlDataCollection();
     }
 
-    /** @test */
-    public function can_decode_avl_data_collection()
+    /**
+     * @test
+     */
+    public function can_decode_avl_data_collection(): void
     {
         $reader = new Reader($this->validAvlCollectionData());
         $codec = $this->codecClass();
@@ -44,8 +49,10 @@ trait TestAvlData
         $this->assertTrue($reader->isEof(), 'The codec did not read all avl collection bytes');
     }
 
-    /** @test */
-    public function can_decode_avl_data()
+    /**
+     * @test
+     */
+    public function can_decode_avl_data(): void
     {
         $reader = new Reader($this->validAvlData());
         $codec = $this->codecClass();
@@ -55,27 +62,27 @@ trait TestAvlData
         $this->assertAvlData($avlData);
     }
 
-    private function assertAvlData($avlData)
+    private function assertAvlData($avlData): void
     {
         $this->assertNotNull($avlData);
-        $this->assertEquals(1185345998335 , $avlData->getTimestamp());
-        $this->assertEquals(0 , $avlData->getPriority());
+        $this->assertEquals(1185345998335, $avlData->getTimestamp());
+        $this->assertEquals(0, $avlData->getPriority());
         $this->assertGpsElement($avlData->getGpsElement());
         $this->assertIoElement($avlData->getIoElement());
     }
 
-    private function validAvlCollectionData()
+    private function validAvlCollectionData(): string
     {
-        return 
+        return
             '08'.                           // Codec ID
             '01'.                           // Number of data
             $this->validAvlData().          // AVL Data
             '01';                           // Number of data
     }
 
-    private function validAvlData()
+    private function validAvlData(): string
     {
-        return 
+        return
             '00000113fc208dff'.             // Timestamp in milliseconds 1185345998335 (25 Jul 2007 06:46:38 UTC)
             '00'.                           // Priority
             $this->validGpsElement().       // Gps Element
