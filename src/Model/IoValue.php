@@ -26,6 +26,7 @@ class IoValue extends Model
             1 => 'C',
             2 => 'S',
             4 => 'L',
+            8 => 'Q',
             default => throw new IoValueLengthException(strlen($this->binary)),
         };
 
@@ -41,6 +42,7 @@ class IoValue extends Model
             1 => 'c',
             2 => 's',
             4 => 'l',
+            8 => 'q',
             default => throw new IoValueLengthException(strlen($this->binary)),
         };
 
