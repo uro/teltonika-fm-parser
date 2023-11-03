@@ -9,7 +9,7 @@ class IoElement extends Model
     /**
      * @var IoProperty[]
      */
-    private array $properties;
+    private array $properties = [];
 
     public function __construct(private readonly int $eventId, private readonly int $numberOfElements)
     {
