@@ -32,7 +32,7 @@ class IoElement extends Model
 
     public function getPropertyById(int $id): ?IoProperty
     {
-        return $this->properties[$id];
+        return $this->properties[$id] ?? null;
     }
 
     /**
