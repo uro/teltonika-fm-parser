@@ -6,6 +6,8 @@ namespace Tests\Unit\Model;
 
 use PHPUnit\Framework\TestCase;
 use Uro\TeltonikaFmParser\Model\IoElement;
+use Uro\TeltonikaFmParser\Model\IoProperty;
+use Uro\TeltonikaFmParser\Model\IoValue;
 
 class IoElementTest extends TestCase
 {
@@ -27,5 +29,18 @@ class IoElementTest extends TestCase
         $numberOfElements = (new IoElement(0, 2))->getNumberOfElements();
 
         $this->assertEquals(2, $numberOfElements);
+    }
+
+    /**
+     * @test
+     */
+    public function can_get_properties(): void
+    {
+        $properties = [new IoProperty(1, new IoValue(''))];
+
+        $ioElement = new IoElement(0, 2);
+        $ioElement->addProperties($properties);
+
+        $this->assertEqualsCanonicalizing($properties, $ioElement->getProperties());
     }
 }

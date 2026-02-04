@@ -9,7 +9,7 @@ class IoElement extends Model
     /**
      * @var IoProperty[]
      */
-    private array $properties;
+    private array $properties = [];
 
     public function __construct(private readonly int $eventId, private readonly int $numberOfElements)
     {
@@ -30,9 +30,14 @@ class IoElement extends Model
         return $this->properties;
     }
 
+    public function hasPropertyById(int $id): bool
+    {
+        return array_key_exists($id, $this->properties);
+    }
+
     public function getPropertyById(int $id): ?IoProperty
     {
-        return $this->properties[$id];
+        return $this->hasPropertyById($id) ? $this->properties[$id] : null;
     }
 
     /**
