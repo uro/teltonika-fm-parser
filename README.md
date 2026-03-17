@@ -13,10 +13,13 @@ It was build with [Teltonika protocols v2.10](FMXXXX_Protocols_v2.10.pdf) docume
 ```json
 {
     "require": {
-        "php": ">=7.0"
+        "php": ">=8.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7"
+        "phpunit/phpunit": "^10.0",
+        "mockery/mockery": "^1.5",
+        "phpstan/phpstan": "^1.10",
+        "friendsofphp/php-cs-fixer": "^3.15"
     }
 }
 ```
@@ -24,6 +27,8 @@ It was build with [Teltonika protocols v2.10](FMXXXX_Protocols_v2.10.pdf) docume
 ## Usage:
 
 ```php
+use Uro\TeltonikaFmParser\FmParser;
+
 $parser = new FmParser('tcp');
 
 // Decode IMEI
@@ -38,6 +43,8 @@ $packet = $parser->decodeData($payload);
 ### TCP
 
 ```php
+    use Uro\TeltonikaFmParser\FmParser;
+    
 	$parser = new FmParser('tcp');
 	$socket = stream_socket_server("tcp://0.0.0.0:8043", $errno, $errstr);
 	if (!$socket) {
